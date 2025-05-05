@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CsWin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #151933;
+            color: #fff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #1f2547;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-tab {
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+            color: #fff;
+        }
+        
+        .nav-tab:hover, .nav-tab.active {
+            background-color: #2a3154;
+        }
+        
+        .balance {
+            background: linear-gradient(45deg, #ffd700, #ff9d00);
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #151933;
+        }
+        
+        .content {
+            min-height: 500px;
+            background-color: #1f2547;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+        }
+        
+        /* Side Menu */
+        .side-menu {
+            width: 200px;
+            background-color: #1a2042;
+            border-radius: 8px;
+            padding: 15px;
+            margin-right: 20px;
+        }
+        
+        .side-menu-item {
+            background-color: #2a3154;
+            margin-bottom: 10px;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .side-menu-item:hover, .side-menu-item.active {
+            background-color: #ffd700;
+            color: #151933;
+        }
+        
+        .main-content {
+            flex: 1;
+        }
+        
+        .game-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .game-card {
+            background-color: #2a3154;
+            border-radius: 10px;
+            padding: 20px;
+            width: calc(33.333% - 14px);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .game-card h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+        
+        .game-card p {
+            color: #ccc;
+            font-size: 14px;
+            margin-bottom: 15px;
+            height: 60px;
+            overflow: hidden;
+        }
+        
+        .game-image {
+            width: 100%;
+            height: 150px;
+            background-color: #151933;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #ffd700;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #ffd700, #ff9d00);
+            color: #151933;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .game-container {
+            display: none;
+        }
+        
+        .game-container.active {
+            display: block;
+        }
+        
+        .game-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        input[type="number"], input[type="text"] {
+            background-color: #151933;
+            border: 1px solid #2a3154;
+            padding: 10px;
+            border-radius: 5px;
+            color: #fff;
+            flex: 1;
+        }
+        
+        .game-area {
+            min-height: 300px;
+            background-color: #2a3154;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* Crash Game */
+        .crash-graph {
+            height: 300px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            background-color: #151933;
+        }
+        
+        .crash-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 2px;
+            height: 0;
+            background-color: #4CAF50;
+            transition: height 0.1s linear;
+        }
+        
+        .crash-multiplier {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .crash-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Mines Game */
+        .mines-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .mines-cell {
+            aspect-ratio: 1;
+            background-color: #151933;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .mines-cell:hover {
+            background-color: #1f2547;
+        }
+        
+        .mines-cell.revealed {
+            background-color: #4CAF50;
+        }
+        
+        .mines-cell.bomb {
+            background-color: #f44336;
+        }
+        
+        .mines-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .mines-btn {
+            flex: 1;
+            padding: 10px;
+            background-color: #151933;
+            border: 1px solid #2a3154;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .mines-btn.active {
+            background-color: #ffd700;
+            color: #151933;
+        }
+        
+        /* Defuse Game */
+        .defuse-slider-container {
+            padding: 20px 0;
+        }
+        
+        .defuse-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 10px;
+            border-radius: 5px;
+            background: #151933;
+            outline: none;
+        }
+        
+        .defuse-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ffd700;
+            cursor: pointer;
+        }
+        
+        .defuse-value {
+            margin-top: 10px;
+            font-size: 18px;
+            text-align: center;
+        }
+        
+        .defuse-odds {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #ccc;
+            text-align: center;
+        }
+        
+        .defuse-result {
+            margin-top: 30px;
+            font-size: 36px;
+            text-align: center;
+            color: #ffd700;
+            min-height: 50px;
+        }
+        
+        /* Bonuses */
+        .bonus-container {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .bonus-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #ffd700;
+        }
+        
+        .bonus-description {
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: #ccc;
+        }
+        
+        .bonus-box {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, #ffd700, #ff9d00);
+            border-radius: 10px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #151933;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .bonus-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+        }
+        
+        .bonus-timer {
+            font-size: 18px;
+            color: #ccc;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        /* Partnership */
+        .partnership-container {
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .partnership-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #ffd700;
+            text-align: center;
+        }
+        
+        .partnership-text {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        .partnership-highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .back-btn {
+            background-color: transparent;
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .back-btn:hover {
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+        
+        .winnings {
+            font-size: 20px;
+            color: #4CAF50;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .cashout-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+            display: none;
+        }
+        
+        .cashout-btn:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">CsWin</div>
+            <div class="nav-tabs">
+                <div class="nav-tab active" data-tab="games">Игры</div>
+                <div class="nav-tab" data-tab="bonuses">Бонусы</div>
+                <div class="nav-tab" data-tab="partnership">Партнерство</div>
+            </div>
+            <div class="balance">Баланс: <span id="balance">100</span></div>
+        </header>
+        
+        <div class="content">
+            <!-- Side Menu -->
+            <div class="side-menu" id="side-menu" style="display: none;">
+                <div class="side-menu-item active" data-game="crash">Crash</div>
+                <div class="side-menu-item" data-game="mines">Mines</div>
+                <div class="side-menu-item" data-game="defuse">Defuse</div>
+            </div>
+            
+            <div class="main-content">
+                <!-- Games Tab -->
+                <div class="tab-content active" id="games-tab">
+                    <div class="game-list" id="game-list">
+                        <div class="game-card" data-game="crash">
+                            <div class="game-image">CRASH</div>
+                            <h3>Crash</h3>
+                            <p>Игра на увеличивающийся множитель. Успей вывести деньги до обвала!</p>
+                            <button class="btn" onclick="openGame('crash')">Играть</button>
+                        </div>
+                        <div class="game-card" data-game="mines">
+                            <div class="game-image">MINES</div>
+                            <h3>Mines</h3>
+                            <p>Открывайте безопасные клетки и избегайте бомб, чтобы выиграть.</p>
+                            <button class="btn" onclick="openGame('mines')">Играть</button>
+                        </div>
+                        <div class="game-card" data-game="defuse">
+                            <div class="game-image">DEFUSE</div>
+                            <h3>Defuse</h3>
+                            <p>Угадайте, выпадет ли число меньше выбранного вами значения.</p>
+                            <button class="btn" onclick="openGame('defuse')">Играть</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Crash Game Container -->
+                    <div class="game-container" id="crash-container">
+                        <button class="back-btn" onclick="closeGame('crash')">← Назад</button>
+                        <h2>Crash</h2>
+                        <div class="game-controls">
+                            <div class="input-group">
+                                <label for="crash-bet">Ставка:</label>
+                                <input type="number" id="crash-bet" min="1" value="10">
+                            </div>
+                            <div class="input-group">
+                                <div class="checkbox-wrapper">
+                                    <input type="checkbox" id="crash-auto">
+                                    <label for="crash-auto">Авто-вывод</label>
+                                </div>
+                                <input type="number" id="crash-auto-value" min="1.1" step="0.1" value="2.0" placeholder="Коэффициент авто-вывода">
+                            </div>
+                            <button class="btn" id="crash-play-btn">Играть</button>
+                            <button class="cashout-btn" id="crash-cashout-btn">Вывести</button>
+                            <div class="winnings" id="crash-winnings"></div>
+                        </div>
+                        <div class="game-area">
+                            <div class="crash-graph">
+                                <div class="crash-line" id="crash-line"></div>
+                                <div class="crash-multiplier" id="crash-multiplier">1.00x</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mines Game Container -->
+                    <div class="game-container" id="mines-container">
+                        <button class="back-btn" onclick="closeGame('mines')">← Назад</button>
+                        <h2>Mines</h2>
+                        <div class="game-controls">
+                            <div class="mines-controls">
+                                <button class="mines-btn active" data-bombs="3">3 бомбы</button>
+                                <button class="mines-btn" data-bombs="5">5 бомб</button>
+                                <button class="mines-btn" data-bombs="10">10 бомб</button>
+                                <button class="mines-btn" data-bombs="15">15 бомб</button>
+                            </div>
+                            <div class="input-group">
+                                <label for="mines-bet">Ставка:</label>
+                                <input type="number" id="mines-bet" min="1" value="10">
+                            </div>
+                            <button class="btn" id="mines-play-btn">Играть</button>
+                            <button class="cashout-btn" id="mines-cashout-btn">Забрать выигрыш</button>
+                            <div class="winnings" id="mines-winnings"></div>
+                        </div>
+                        <div class="game-area">
+                            <div class="mines-grid" id="mines-grid"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Defuse Game Container -->
+                    <div class="game-container" id="defuse-container">
+                        <button class="back-btn" onclick="closeGame('defuse')">← Назад</button>
+                        <h2>Defuse</h2>
+                        <div class="game-controls">
+                            <div class="input-group">
+                                <label for="defuse-bet">Ставка:</label>
+                                <input type="number" id="defuse-bet" min="1" value="10">
+                            </div>
+                            <div class="defuse-slider-container">
+                                <input type="range" min="1" max="95" value="50" class="defuse-slider" id="defuse-slider">
+                                <div class="defuse-value">Число: <span id="defuse-value">50</span></div>
+                                <div class="defuse-odds">Шанс: <span id="defuse-chance">50</span>% / Коэффициент: <span id="defuse-multiplier">1.94</span>x</div>
+                            </div>
+                            <button class="btn" id="defuse-play-btn">Играть</button>
+                            <div class="defuse-result" id="defuse-result"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bonuses Tab -->
+                <div class="tab-content" id="bonuses-tab">
+                    <div class="bonus-container">
+                        <h2 class="bonus-title">Ежедневный бонус</h2>
+                        <p class="bonus-description">Нажмите на сундук чтобы получить свой ежедневный бонус!</p>
+                        <div class="bonus-box" id="bonus-box">
+                            <span>БОНУС</span>
+                        </div>
+                        <div class="bonus-timer" id="bonus-timer">
+                            Следующий бонус будет доступен через: <span id="bonus-time">24:00:00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Partnership Tab -->
+                <div class="tab-content" id="partnership-tab">
+                    <div class="partnership-container">
+                        <h2 class="partnership-title">Партнерская программа</h2>
+                        <p class="partnership-text">
+                            Мы рады предложить выгодные условия сотрудничества для наших партнеров. Станьте частью успешной команды CsWin и получайте стабильный доход от привлечения новых игроков!
+                        </p>
+                        <p class="partnership-text">
+                            Для подачи заявки на партнерство, пожалуйста, напишите нам на почту <span class="partnership-highlight">example@site.com</span> и укажите следующую информацию:
+                        </p>
+                        <ul class="partnership-text">
+                            <li>Ссылку на ваш ресурс</li>
+                            <li>Статистику посещаемости</li>
+                            <li>Целевую аудиторию</li>
+                        </ul>
+                        <p class="partnership-text">
+                            Наши менеджеры рассмотрят вашу заявку в кратчайшие сроки и свяжутся с вами для обсуждения деталей сотрудничества.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let balance = 100;
+        const balanceElement = document.getElementById('balance');
+        
+        // Update balance function
+        function updateBalance(amount) {
+            balance += amount;
+            balanceElement.textContent = balance.toFixed(2);
+        }
+        
+        // Tab navigation
+        const tabs = document.querySelectorAll('.nav-tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+    // Скрываем карточки игр
+    document.querySelector('.game-list').style.display = 'none';
+    
+    // Показываем боковое меню
+    document.getElementById('side-menu').style.display = 'block';
+    
+    // По умолчанию активируем первую игру (Crash)
+    document.getElementById('crash-container').style.display = 'block';
+});
+
+        // Hide all tab contents except the first one initially
+        tabContents.forEach((content, index) => {
+            if (index !== 0) {
+                content.style.display = 'none';
+            }
+        });
+        
+        tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        const tabId = tab.getAttribute('data-tab');
+        
+        // Update active tab
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        // Show active content
+        tabContents.forEach(content => {
+            content.style.display = 'none';
+            if (content.id === `${tabId}-tab`) {
+                content.style.display = 'block';
+            }
+        });
+        
+        // Close all games when switching tabs
+        document.querySelectorAll('.game-container').forEach(container => {
+            container.style.display = 'none';
+        });
+        
+        // Показываем меню и первую игру только в разделе "Игры"
+        if (tabId === 'games') {
+            document.getElementById('side-menu').style.display = 'block';
+            document.querySelector('.game-list').style.display = 'none'; // Скрываем карточки
+            
+            // Показываем первую игру по умолчанию
+            const activeGameId = document.querySelector('.side-menu-item.active').getAttribute('data-game');
+            document.getElementById(`${activeGameId}-container`).style.display = 'block';
+        } else {
+            document.getElementById('side-menu').style.display = 'none';
+        }
+    });
+});
+        
+        // Side menu navigation
+        const sideMenuItems = document.querySelectorAll('.side-menu-item');
+        
+        sideMenuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const gameId = item.getAttribute('data-game');
+                
+                // Update active item
+                sideMenuItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                
+                // Hide all game containers
+                document.querySelectorAll('.game-container').forEach(container => {
+                    container.style.display = 'none';
+                });
+                
+                // Show selected game
+                document.getElementById(`${gameId}-container`).style.display = 'block';
+            });
+        });
+        
+        // Game navigation
+        function openGame(game) {
+            document.querySelector('.game-list').style.display = 'none';
+            document.getElementById('side-menu').style.display = 'block';
+            
+            // Set active side menu item
+            sideMenuItems.forEach(item => {
+                if (item.getAttribute('data-game') === game) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            
+            // Show selected game
+            document.querySelectorAll('.game-container').forEach(container => {
+                container.style.display = 'none';
+            });
+            document.getElementById(`${game}-container`).style.display = 'block';
+            document.querySelectorAll('.back-btn').forEach(btn => btn.style.display = 'inline-block');
+        }
+        
+        function closeGame(game) {
+    document.getElementById(`${game}-container`).style.display = 'none';
+    
+    // Вместо показа карточек выбираем первую игру
+    document.getElementById('crash-container').style.display = 'block';
+    
+    // Обновляем активный элемент в боковом меню
+    document.querySelectorAll('.side-menu-item').forEach(item => {
+        if (item.getAttribute('data-game') === 'crash') {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+}
+        
+        // Исправленная логика игры Crash
+
+// Crash Game Logic
+const crashPlayBtn = document.getElementById('crash-play-btn');
+const crashCashoutBtn = document.getElementById('crash-cashout-btn');
+const crashLine = document.getElementById('crash-line');
+const crashMultiplier = document.getElementById('crash-multiplier');
+const crashBet = document.getElementById('crash-bet');
+const crashAuto = document.getElementById('crash-auto');
+const crashAutoValue = document.getElementById('crash-auto-value');
+const crashWinnings = document.getElementById('crash-winnings');
+
+let crashInterval;
+let currentMultiplier = 1.00;
+let crashActive = false;
+let crashGameOver = false;
+let crashMaxMultiplier;
+let betAmount = 0;
+
+// Инициализация элементов игры
+crashCashoutBtn.style.display = 'none';
+crashWinnings.style.display = 'none';
+
+crashPlayBtn.addEventListener('click', () => {
+    betAmount = parseFloat(crashBet.value);
+    
+    if (betAmount <= 0 || isNaN(betAmount)) {
+        alert('Пожалуйста, введите корректную сумму ставки');
+        return;
+    }
+    
+    if (betAmount > balance) {
+        alert('Недостаточно средств');
+        return;
+    }
+    
+    // Deduct bet from balance
+    updateBalance(-betAmount);
+    
+    // Reset game state
+    crashActive = true;
+    crashGameOver = false;
+    currentMultiplier = 1.00;
+    crashLine.style.height = '0';
+    crashLine.style.left = '0';
+    crashMultiplier.textContent = '1.00x';
+    crashPlayBtn.disabled = true;
+    crashCashoutBtn.style.display = 'block';
+    crashWinnings.style.display = 'none';
+    
+    // Генерация случайной точки краша от 1.1 до 10
+    crashMaxMultiplier = 1.1 + Math.random() * 8.9;
+    
+    // Start game loop
+    let speed = 50; // Update every 50ms
+    let height = 0;
+    let width = 0;
+    
+    // Clear previous interval if exists
+    if (crashInterval) {
+        clearInterval(crashInterval);
+    }
+    
+    crashInterval = setInterval(() => {
+        if (!crashActive) return;
+        
+        // Increase multiplier with more realistic growth curve
+        currentMultiplier += 0.01 * (1 + (currentMultiplier * 0.05));
+        
+        // Round to 2 decimal places
+        currentMultiplier = Math.round(currentMultiplier * 100) / 100;
+        
+        // Update display
+        crashMultiplier.textContent = currentMultiplier.toFixed(2) + 'x';
+        
+        // Increase line height and width for better visual
+        height += 1;
+        width += 0.3;
+        crashLine.style.height = height + 'px';
+        crashLine.style.left = width + 'px';
+        
+        // Check for auto cashout
+        if (crashAuto.checked && currentMultiplier >= parseFloat(crashAutoValue.value)) {
+            cashoutCrash();
+        }
+        
+        // Check if game should end
+        if (currentMultiplier >= crashMaxMultiplier) {
+            endCrashGame();
+        }
+    }, speed);
+});
+
+crashCashoutBtn.addEventListener('click', cashoutCrash);
+
+function cashoutCrash() {
+    if (!crashActive || crashGameOver) return;
+    
+    const winnings = betAmount * currentMultiplier;
+    
+    // Add winnings to balance
+    updateBalance(winnings);
+    
+    // Display winnings
+    crashWinnings.textContent = `Выигрыш: ${winnings.toFixed(2)}`;
+    crashWinnings.style.display = 'block';
+    crashWinnings.style.color = '#4CAF50';
+    
+    // End game
+    crashActive = false;
+    crashCashoutBtn.style.display = 'none';
+    
+    // Allow new game
+    setTimeout(() => {
+        crashPlayBtn.disabled = false;
+    }, 1000);
+}
+
+function endCrashGame() {
+    crashGameOver = true;
+    crashActive = false;
+    
+    // Change color to red
+    crashLine.style.backgroundColor = '#f44336';
+    crashMultiplier.style.color = '#f44336';
+    crashMultiplier.textContent = 'CRASHED!';
+    
+    // Show crash message
+    crashWinnings.textContent = 'Вы проиграли!';
+    crashWinnings.style.display = 'block';
+    crashWinnings.style.color = '#f44336';
+    
+    // Clear interval to stop game
+    clearInterval(crashInterval);
+    
+    // Allow new game
+    setTimeout(() => {
+        crashPlayBtn.disabled = false;
+        crashCashoutBtn.style.display = 'none';
+        crashLine.style.backgroundColor = '#4CAF50';
+        crashMultiplier.style.color = '#ffd700';
+        crashMultiplier.textContent = '1.00x';
+    }, 2000);
+}
+        
+        // Mines Game Logic
+        const minesPlayBtn = document.getElementById('mines-play-btn');
+        const minesCashoutBtn = document.getElementById('mines-cashout-btn');
+        const minesGrid = document.getElementById('mines-grid');
+        const minesBet = document.getElementById('mines-bet');
+        const minesWinnings = document.getElementById('mines-winnings');
+        const minesBombButtons = document.querySelectorAll('.mines-btn');
+        
+        let minesActive = false;
+        let minesBombsCount = 3; // Default
+        let minesBombs = [];
+        let minesRevealed = [];
+        let minesMultiplier = 1.00;
+        
+        // Initialize mines grid
+        for (let i = 0; i < 25; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('mines-cell');
+            cell.setAttribute('data-index', i);
+            cell.addEventListener('click', () => revealMinesCell(i));
+            minesGrid.appendChild(cell);
+        }
+        
+        // Set bombs count
+        minesBombButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                if (minesActive) return;
+                
+                minesBombButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                minesBombsCount = parseInt(button.getAttribute('data-bombs'));
+            });
+        });
+        
+        minesPlayBtn.addEventListener('click', () => {
+            const betAmount = parseFloat(minesBet.value);
+            
+            if (betAmount <= 0 || isNaN(betAmount)) {
+                alert('Пожалуйста, введите корректную сумму ставки');
+                return;
+            }
+            
+            if (betAmount > balance) {
+                alert('Недостаточно средств');
+                return;
+            }
+            
+            // Deduct bet from balance
+            updateBalance(-betAmount);
+            
+            // Reset game state
+            minesActive = true;
+            minesRevealed = [];
+            minesMultiplier = 1.00;
+            minesPlayBtn.disabled = true;
+            minesCashoutBtn.style.display = 'block';
+            minesWinnings.style.display = 'none';
+            
+            // Reset grid
+            document.querySelectorAll('.mines-cell').forEach(cell => {
+                cell.classList.remove('revealed', 'bomb');
+                cell.textContent = '';
+            });
+            
+            // Generate random bomb positions
+            minesBombs = [];
+            while (minesBombs.length < minesBombsCount) {
+                const random = Math.floor(Math.random() * 25);
+                if (!minesBombs.includes(random)) {
+                    minesBombs.push(random);
+                }
+            }
+        });
+        
+        function revealMinesCell(index) {
+            if (!minesActive || minesRevealed.includes(index)) return;
+            
+            const cell = document.querySelector(`.mines-cell[data-index="${index}"]`);
+            
+            // Check if bomb
+            if (minesBombs.includes(index)) {
+                // Game over
+                cell.classList.add('bomb');
+                cell.textContent = '💣';
+                
+                // Reveal all bombs
+                minesBombs.forEach(bombIndex => {
+                    const bombCell = document.querySelector(`.mines-cell[data-index="${bombIndex}"]`);
+                    bombCell.classList.add('bomb');
+                    bombCell.textContent = '💣';
+                });
+                
+                minesActive = false;
+                minesCashoutBtn.style.display = 'none';
+                minesWinnings.textContent = 'Вы проиграли!';
+                minesWinnings.style.display = 'block';
+                minesWinnings.style.color = '#f44336';
+                
+                // Allow new game
+                setTimeout(() => {
+                    minesPlayBtn.disabled = false;
+                    minesWinnings.style.color = '#4CAF50';
+                }, 2000);
+                
+                return;
+            }
+            
+            // Reveal safe cell
+            cell.classList.add('revealed');
+            cell.textContent = '💎';
+            minesRevealed.push(index);
+            
+            // Calculate multiplier (simplified)
+            const safeCount = 25 - minesBombsCount;
+            const revealedCount = minesRevealed.length;
+            minesMultiplier = calculateMinesMultiplier(revealedCount, safeCount, minesBombsCount);
+            
+            // Update winnings display
+            const betAmount = parseFloat(minesBet.value);
+            const potentialWin = betAmount * minesMultiplier;
+            minesWinnings.textContent = `Потенциальный выигрыш: ${potentialWin.toFixed(2)}`;
+            minesWinnings.style.display = 'block';
+            
+            // Check if all safe cells are revealed
+            if (minesRevealed.length === (25 - minesBombsCount)) {
+                // Auto cashout on complete win
+                cashoutMines();
+            }
+        }
+        
+        function calculateMinesMultiplier(revealedCount, safeCount, bombsCount) {
+            // This is a simplified formula - real casinos use more complex calculations
+            return 1 + (revealedCount / safeCount) * (bombsCount * 0.5);
+        }
+        
+        minesCashoutBtn.addEventListener('click', cashoutMines);
+        
+        function cashoutMines() {
+            if (!minesActive) return;
+            
+            const betAmount = parseFloat(minesBet.value);
+            const winnings = betAmount * minesMultiplier;
+            
+            // Add winnings to balance
+            updateBalance(winnings);
+            
+            // Display winnings
+            minesWinnings.textContent = `Выигрыш: ${winnings.toFixed(2)}`;
+            
+            // End game
+            minesActive = false;
+            minesCashoutBtn.style.display = 'none';
+            
+            // Allow new game
+            setTimeout(() => {
+                minesPlayBtn.disabled = false;
+            }, 1000);
+        }
+        
+        // Defuse Game Logic
+        const defusePlayBtn = document.getElementById('defuse-play-btn');
+        const defuseSlider = document.getElementById('defuse-slider');
+        const defuseValue = document.getElementById('defuse-value');
+        const defuseChance = document.getElementById('defuse-chance');
+        const defuseMultiplier = document.getElementById('defuse-multiplier');
+        const defuseResult = document.getElementById('defuse-result');
+        const defuseBet = document.getElementById('defuse-bet');
+        
+        // Update defuse slider value
+        defuseSlider.addEventListener('input', updateDefuseSlider);
+        
+        function updateDefuseSlider() {
+            const value = parseInt(defuseSlider.value);
+            defuseValue.textContent = value;
+            defuseChance.textContent = value;
+            
+            // Calculate multiplier: 97/x
+            const mult = (97 / value).toFixed(2);
+            defuseMultiplier.textContent = mult;
+        }
+        
+        // Initialize slider
+        updateDefuseSlider();
+        
+        defusePlayBtn.addEventListener('click', () => {
+            const betAmount = parseFloat(defuseBet.value);
+            
+            if (betAmount <= 0 || isNaN(betAmount)) {
+                alert('Пожалуйста, введите корректную сумму ставки');
+                return;
+            }
+            
+            if (betAmount > balance) {
+                alert('Недостаточно средств');
+                return;
+            }
+            
+            // Deduct bet from balance
+            updateBalance(-betAmount);
+            
+            // Generate random number 1-100
+            const randomNumber = Math.floor(Math.random() * 100) + 1;
+            const selectedValue = parseInt(defuseSlider.value);
+            
+            // Display result with animation
+            let counter = 0;
+            defuseResult.textContent = '?';
+            
+            const resultInterval = setInterval(() => {
+                counter++;
+                if (counter > 20) {
+                    clearInterval(resultInterval);
+                    defuseResult.textContent = randomNumber;
+                    
+                    // Check win condition
+                    if (randomNumber < selectedValue) {
+                        // Win
+                        const multiplier = 97 / selectedValue;
+                        const winnings = betAmount * multiplier;
+                        
+                        // Add winnings to balance
+                        updateBalance(winnings);
+                        
+                        // Display win message
+                        setTimeout(() => {
+                            defuseResult.textContent = `${randomNumber} - Выигрыш ${winnings.toFixed(2)}!`;
+                            defuseResult.style.color = '#4CAF50';
+                        }, 500);
+                    } else {
+                        // Loss
+                        setTimeout(() => {
+                            defuseResult.textContent = `${randomNumber} - Проигрыш!`;
+                            defuseResult.style.color = '#f44336';
+                        }, 500);
+                    }
+                    
+                    // Reset color after 2 seconds
+                    setTimeout(() => {
+                        defuseResult.style.color = '#ffd700';
+                    }, 2500);
+                } else {
+                    defuseResult.textContent = Math.floor(Math.random() * 100) + 1;
+                }
+            }, 50);
+        });
+        
+        // Bonus System
+        const bonusBox = document.getElementById('bonus-box');
+        const bonusTimer = document.getElementById('bonus-timer');
+        const bonusTimeElement = document.getElementById('bonus-time');
+        
+        let bonusAvailable = true;
+        let bonusTimeLeft = 24 * 60 * 60; // 24 hours in seconds
+        let bonusInterval;
+        
+        bonusBox.addEventListener('click', () => {
+            if (!bonusAvailable) return;
+            
+            // Generate random bonus amount between 1 and 100
+            const bonusAmount = Math.floor(Math.random() * 100) + 1;
+            
+            // Add to balance
+            updateBalance(bonusAmount);
+            
+            // Show message
+            bonusBox.innerHTML = `<span>+${bonusAmount}</span>`;
+            
+            // Start cooldown
+            bonusAvailable = false;
+            bonusTimer.style.display = 'block';
+            
+            // Reset timer display
+            bonusTimeLeft = 24 * 60 * 60;
+            updateBonusTimer();
+            
+            // Start countdown
+            bonusInterval = setInterval(updateBonusTimer, 1000);
+            
+            // Disable bonus box
+            bonusBox.style.opacity = '0.5';
+            bonusBox.style.cursor = 'not-allowed';
+        });
+        
+        function updateBonusTimer() {
+            if (bonusTimeLeft <= 0) {
+                clearInterval(bonusInterval);
+                bonusAvailable = true;
+                bonusTimer.style.display = 'none';
+                bonusBox.innerHTML = '<span>БОНУС</span>';
+                bonusBox.style.opacity = '1';
+                bonusBox.style.cursor = 'pointer';
+                return;
+            }
+            
+            bonusTimeLeft--;
+            
+            // Format time
+            const hours = Math.floor(bonusTimeLeft / 3600);
+            const minutes = Math.floor((bonusTimeLeft % 3600) / 60);
+            const seconds = bonusTimeLeft % 60;
+            
+            bonusTimeElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Initialize first tab
+        document.querySelector('.nav-tab[data-tab="games"]').click();
+    </script>
+</body>
+</html>
